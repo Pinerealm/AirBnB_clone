@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 """This is the entry point of the command interpreter for AirBnB_clone"""
 import cmd
-from .models.base_model import BaseModel
+from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
     """This defines the command interpreter for AirBnB_clone"""
     prompt = '(hbnb) '
-    classes = ["BaseModel"]
+    classes = {"BaseModel": BaseModel, "User": User}
 
     def do_quit(self, line):
         """Quit command to exit the program"""
@@ -39,7 +40,7 @@ class HBNBCommand(cmd.Cmd):
         elif line not in self.classes:
             print("** class doesn't exist **")
         else:
-            new_instance = BaseModel()
+            new_instance = self.classes[line]()
             print(new_instance.id)
             new_instance.save()
 
