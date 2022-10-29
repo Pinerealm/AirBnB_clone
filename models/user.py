@@ -4,7 +4,7 @@ from .base_model import BaseModel
 
 
 class User(BaseModel):
-    """This class defines the attributes of a user, 
+    """This class defines the attributes of a user,
     inheriting from BaseModel"""
     email = ""
     password = ""
