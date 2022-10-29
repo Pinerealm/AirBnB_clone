@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This is the entry point of the command interpreter for AirBnB_clone"""
 import cmd
-from models.base_model import BaseModel
+from .models.base_model import BaseModel
 from models import storage
 
 
