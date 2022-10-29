@@ -132,7 +132,9 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line: str):
         """Handles other previously undefined commands"""
+        methods = {'show': self.do_show, 'destroy': self.do_destroy}
         args = line.split('.')
+
         if len(args) != 2:
             super().default(line)
         elif args[0] not in self.classes:
@@ -142,9 +144,11 @@ class HBNBCommand(cmd.Cmd):
             self.do_all(args[0])
         elif args[1] == 'count()':
             print(len([v for k, v in storage.all().items() if args[0] in k]))
-        elif 'show' in args[1]:
+        
+        key = args[1].split('(')[0]
+        if key in methods:
             id = args[1].split('"')[1]
-            self.do_show("{} {}".format(args[0], id))
+            methods[key](' '.join([args[0], id]))
 
 
 if __name__ == '__main__':
