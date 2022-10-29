@@ -24,15 +24,6 @@ class HBNBCommand(cmd.Cmd):
         """Do nothing when an empty line is entered"""
         pass
 
-    def do_help(self, line):
-        """Prints help messages for commands"""
-        if line == 'EOF':
-            print(self.do_EOF.__doc__)
-        elif line == 'quit':
-            print(self.do_quit.__doc__)
-        else:
-            super().do_help(line)
-
     def do_create(self, line):
         """Creates a new instance of BaseModel"""
         if not line:
@@ -117,6 +108,20 @@ class HBNBCommand(cmd.Cmd):
                         args[3] = int(args[3])
                 setattr(storage.all()[key], args[2], args[3])
                 storage.all()[key].save()
+
+    def do_help(self, line):
+        """Prints help messages for commands"""
+        commands = {'EOF': self.do_EOF.__doc__,
+                    'quit': self.do_quit.__doc__,
+                    'create': self.do_create.__doc__,
+                    'show': self.do_show.__doc__,
+                    'destroy': self.do_destroy.__doc__,
+                    'all': self.do_all.__doc__,
+                    'update': self.do_update.__doc__}
+        if line in commands:
+            print(commands[line])
+        else:
+            super().do_help(line)
 
 
 if __name__ == '__main__':
