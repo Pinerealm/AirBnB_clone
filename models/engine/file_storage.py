@@ -30,14 +30,20 @@ class FileStorage:
         """Deserializes the JSON file to __objects"""
         from ..base_model import BaseModel
         from ..user import User
+        from ..state import State
+        from ..city import City
+        from ..amenity import Amenity
+        from ..place import Place
+        from ..review import Review
 
+        classes = {"BaseModel": BaseModel, "User": User, "State": State,
+               "City": City, "Amenity": Amenity, "Place": Place,
+               "Review": Review}
         try:
             with open(FileStorage.__file_path, 'r') as f:
                 new_dict = json.load(f)
                 for key, value in new_dict.items():
-                    if value['__class__'] == 'BaseModel':
-                        FileStorage.__objects[key] = BaseModel(**value)
-                    elif value['__class__'] == 'User':
-                        FileStorage.__objects[key] = User(**value)
+                    obj = classes[value["__class__"]](**value)
+                    FileStorage.__objects[key] = obj
         except FileNotFoundError:
             pass
