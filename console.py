@@ -130,6 +130,16 @@ class HBNBCommand(cmd.Cmd):
         else:
             super().do_help(line)
 
+    def default(self, line: str):
+        """Handles other previously undefined commands"""
+        args = line.split('.')
+        if len(args) < 2:
+            super().default(line)
+        elif args[0] not in self.classes:
+            print("** class doesn't exist **")
+        elif args[1] == "all()":
+            self.do_all(args[0])
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
