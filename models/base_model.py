@@ -8,7 +8,7 @@ from . import storage
 class BaseModel:
     """This class defines all common attributes/methods for other classes"""
     def __init__(self, *args, **kwargs):
-        """Instantiation of base model"""
+        """Initializes the instance attributes and assigns a unique id"""
         if kwargs:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
