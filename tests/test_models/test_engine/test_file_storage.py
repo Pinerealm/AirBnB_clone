@@ -47,3 +47,6 @@ class TestFileStorage(unittest.TestCase):
         fs.reload()
         key = "{}.{}".format(bm.__class__.__name__, bm.id)
         self.assertTrue(key in fs.all())
+
+if __name__ == '__main__':
+        unittest.main()
