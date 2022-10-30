@@ -132,7 +132,8 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line: str):
         """Handles other previously undefined commands"""
-        methods = {'show': self.do_show, 'destroy': self.do_destroy}
+        methods = {'show': self.do_show, 'destroy': self.do_destroy,
+                   'update': self.do_update}
         args = line.split('.')
 
         if len(args) != 2:
@@ -148,7 +149,11 @@ class HBNBCommand(cmd.Cmd):
         key = args[1].split('(')[0]
         if key in methods:
             id = args[1].split('"')[1]
-            methods[key](' '.join([args[0], id]))
+            if key == 'update':
+                attr = args[1].split('"')[3]
+                value = args[1].split('"')[5]
+                methods[key](f'{args[0]} {id} {attr} {value}')
+            methods[key](f'{args[0]} {id}')
 
 
 if __name__ == '__main__':
