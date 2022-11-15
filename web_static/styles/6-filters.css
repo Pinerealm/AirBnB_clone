@@ -4,6 +4,7 @@
     width: inherit;
     border: 1px solid #DDD;
     border-radius: 4px;
+    clear: both;
 }
 
 button {
@@ -38,6 +39,7 @@ button:hover {
 	height: inherit;
 	width: 25%;
     float: left;
+	box-sizing: border-box;
 }
 
 .locations {
@@ -45,9 +47,9 @@ button:hover {
 }
 
 .popover {
+    position: relative;
 	display: none;
     padding: 15px 0;
-    margin: 0;
 	background-color: #FAFAFA;
 	width: 100%;
 	border: 1px solid #DDD;
@@ -56,8 +58,9 @@ button:hover {
 
 .popover h2 {
     font-size: 16px;
+    margin-bottom: 3px;
 }
 
-.locations:hover > ul, .amenities:hover > ul {
+.locations:hover .popover, .amenities:hover .popover {
     display: block;
 }
