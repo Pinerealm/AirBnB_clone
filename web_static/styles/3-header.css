@@ -1,9 +1,8 @@
 header {
-    display: flex;
-    background: #FFF no-repeat 20px center;
+    display: inline-block;
+    background: #FFF url(../images/icon.png) 20px center no-repeat;
     height: 70px;
     width: 100%;
     border-bottom: 1px solid;
-    background-image: url(../images/icon.png);
     padding-left: 52px;
 }
