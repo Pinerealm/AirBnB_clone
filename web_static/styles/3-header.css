@@ -1,8 +1,9 @@
 header {
     display: inline-block;
     background: #FFF url(../images/icon.png) 20px center no-repeat;
+    background-size: 50px;
     height: 70px;
     width: 100%;
     border-bottom: 1px solid;
-    padding-left: 52px;
+    padding-left: 70px;
 }
