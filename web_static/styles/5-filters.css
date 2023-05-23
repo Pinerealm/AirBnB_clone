@@ -26,20 +26,21 @@ button:hover {
 
 .locations h3, .amenities h3 {
 	font-weight: 600;
-    margin-top: 26px;
+    margin: 20px 0 0 0;
+    padding: 0;
 }
 
 .locations h4, .amenities h4 {
 	font-weight: 400;
 	font-size: 14px;
-    margin-top: 3px;
+    margin: -1px;
+    padding: 0;
 }
 
 .locations, .amenities {
 	height: 100%;
 	width: 25%;
 	padding-left: 45px;
-    line-height: 10%;
 }
 
 .locations {
