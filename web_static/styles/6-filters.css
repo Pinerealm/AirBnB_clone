@@ -52,7 +52,6 @@ button:hover {
 }
 
 .popover {
-    /* position: absolute; */
 	display: none;
     padding: 15px 0;
 	background-color: #FAFAFA;
@@ -74,7 +73,7 @@ button:hover {
 }
 
 .amenities > ul > li {
-    margin-left: 45px;
+    margin-left: 40px;
 }
 
 .locations:hover .popover, .amenities:hover .popover {
