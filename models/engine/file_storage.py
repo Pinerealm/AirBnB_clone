@@ -15,7 +15,7 @@ from os.path import exists
 import json
 
 
-class FileStorage(BaseModel):
+class FileStorage():
     """File storage class """
     __file_path = "file.json"
     __objects = {}
