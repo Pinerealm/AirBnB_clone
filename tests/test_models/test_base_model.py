@@ -43,8 +43,8 @@ class TestBaseModel(unittest.TestCase):
         """Tests the save method
         """
         b1 = BaseModel()
+        self.assertEqual(b1.created_at, b1.updated_at)
         b1.save()
-        self.assertIsInstance(b1.updated_at, datetime)
         self.assertNotEqual(b1.created_at, b1.updated_at)
 
     def test_to_dict(self):

@@ -1,9 +1,5 @@
 #!/usr/bin/python3
-"""
-This module contains a super class called
-`BaseModel` that defines all common attributes/methods
-for other classes
-"""
+"""The BaseModel module"""
 from datetime import datetime
 import models
 from uuid import uuid4
@@ -14,10 +10,6 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Initializes a BaseModel instance
-        Args:
-            args (attr): no-keyword argument (argument order is important)
-            kwargs (attr): key-worded argument
-                   (argument order is not important)
         """
         if kwargs:
             for key, value in kwargs.items():
@@ -27,12 +19,12 @@ class BaseModel:
                     setattr(self, key, value)
         else:
             self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.created_at = self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __str__(self):
-        """Returns the informal string representation of the instance"""
+        """Returns the informal string representation of the instance
+        """
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id,
                                      self.__dict__)
 
