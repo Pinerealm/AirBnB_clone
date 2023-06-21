@@ -29,14 +29,6 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
-    def postcmd(self, stop, line):
-        """Modify display prompt on exiting in non-interactive mode
-        """
-        if not sys.__stdin__.isatty():
-            print('(hbnb)')
-            return True
-        return stop
-
     def parseline(self, line):
         """Adds support for the `(` syntax """
         if '(' in line:
