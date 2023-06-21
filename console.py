@@ -29,7 +29,7 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
-    def precmd(self, line):
+    def parseline(self, line):
         """Parses the line before it is executed
         """
         if '(' in line:
@@ -43,7 +43,7 @@ class HBNBCommand(cmd.Cmd):
                 line[3] = line[3].replace('##', ': ').replace('%%', ', ')
                 line[2] = line[2].replace('"', '').replace(',', '')
                 line = " *".join([line[1], line[0], line[2], line[3]])
-                return line
+                return super().parseline(line)
             line = line.split()
             if len(line) == 3:
                 #  For show and destroy
@@ -60,7 +60,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 line = " ".join([line[1], line[0]])
 
-        return line
+        return super().parseline(line)
 
     def do_quit(self, arg):
         """Exit the program with the command 'quit'
