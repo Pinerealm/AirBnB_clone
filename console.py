@@ -175,7 +175,8 @@ class HBNBCommand(cmd.Cmd):
 
         if tokens[0] not in self.classes:
             print("** class doesn't exist **")
-        elif len(tokens) == 1:
+            return
+        if len(tokens) == 1:
             print("** instance id missing **")
         else:
             dict_obj = storage.all()
