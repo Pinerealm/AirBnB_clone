@@ -1,26 +1,41 @@
 #!/usr/bin/python3
+"""The console/command interpreter for the AirBnB_clone project
 """
-This module defines a simple command interpreter that
-manage (create, update, destroy, etc) objects via console
-"""
-from models.base_model import BaseModel
+import ast
+import cmd
 from models import storage
 from models.amenity import Amenity
+
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
+
 from models.user import User
-import ast
-import cmd
+from models.base_model import BaseModel
 import sys
 
 
 class HBNBCommand(cmd.Cmd):
-    """Interpreter class """
-    prompt = "(hbnb) "
-    classes = ['BaseModel', 'User', 'State', 'City',
-               'Amenity', 'Place', 'Review']
+    """Defines the HBNBCommand class for AirBnB_clone
+    """
+    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
+    classes = ('BaseModel', 'User', 'State', 'Review',
+               'City', 'Amenity', 'Place')
+
+    def preloop(self):
+        """Displays a different prompt on non-interactive mode
+        """
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
+
+    def postcmd(self, stop, line):
+        """Modify display prompt on exiting in non-interactive mode
+        """
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
+            return True
+        return stop
 
     def parseline(self, line):
         """Adds support for the `(` syntax """
@@ -54,152 +69,164 @@ class HBNBCommand(cmd.Cmd):
         return super().parseline(line)
 
     def do_quit(self, arg):
-        """Type: `quit` to exit the console"""
+        """Exit the program with the command 'quit'
+        """
         return True
 
     def do_EOF(self, arg):
-        """Press: `Ctr + D` to exit the console"""
+        """Exit the program on receiving the EOF signal
+        """
         print()
         return True
 
     def emptyline(self):
-        """Overidding `emptyline` base class method """
+        """Does nothing when an empty line is entered
+        """
         pass
 
     def do_create(self, arg):
-        """Creates a new instance for the given class\
-        \nUsage: create <class name>, or
-        <class name>.create()\
+        """Creates a new instance of a given class, and saves it to a JSON file
+
+        Usage: create <class name>, OR <class name>.create()
         """
-        cmds = arg.split()
-        if len(cmds) == 0:
+        if not arg:
             print("** class name missing **")
-        elif cmds[0] not in self.classes:
+            return
+        tokens = arg.split()
+        if tokens[0] not in self.classes:
             print("** class doesn't exist **")
         else:
-            new_instance = eval(cmds[0])()
+            new_instance = eval(tokens[0])()
             new_instance.save()
             print(new_instance.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance\
-        \nUsage: show <class name> <id>
-        <class name>.show(<id>)\
+        """Prints the string representation of an instance based on the
+        class name and id
+
+        Usage: show <class name> <id> OR <class name>.show(<id>)
         """
-        cmds = arg.split()
-        if len(cmds) == 0:
+        if not arg:
             print("** class name missing **")
-        elif cmds[0] not in self.classes:
+            return
+        tokens = arg.split()
+        if tokens[0] not in self.classes:
             print("** class doesn't exist **")
-        elif len(cmds) == 1:
+        elif len(tokens) == 1:
             print("** instance id missing **")
+
         else:
-            dict_obj = storage.all()
-            key = f"{cmds[0]}.{cmds[1]}"
-            if key in dict_obj:
-                print(dict_obj[key])
+            key = tokens[0] + '.' + tokens[1]
+            if key not in storage.all():
+                print('** no instance found **')
             else:
-                print("** no instance found **")
+                print(storage.all()[key])
 
     def do_destroy(self, arg):
-        """Deletes an instance based on name and id\
-        \nUsage: destroy <class name> <id>
-        <class name>.destroy(<id>)\
+        """Deletes an instance based on class name and id
+
+        Usage: destroy <class name> <id> OR <class name>.destroy(<id>)
         """
-        cmds = arg.split()
-        if len(cmds) == 0:
+        if not arg:
             print("** class name missing **")
-        elif cmds[0] not in self.classes:
+            return
+        tokens = arg.split()
+        if tokens[0] not in self.classes:
             print("** class doesn't exist **")
-        elif len(cmds) == 1:
+        elif len(tokens) == 1:
             print("** instance id missing **")
+
         else:
-            dict_obj = storage.all()
-            key = f"{cmds[0]}.{cmds[1]}"
-            if key in dict_obj:
-                del dict_obj[key]
-                storage.__objects = dict_obj
-                storage.save()
+            key = tokens[0] + '.' + tokens[1]
+            if key not in storage.all():
+                print('** no instance found **')
             else:
-                print("** no instance found **")
+                del storage.all()[key]
+                storage.save()
 
     def do_all(self, arg):
-        """Prints all string representation of all instances\
-        \nUsage: all <class name>, or all
-        <class name>.all()\
+        """Displays the string representation of all instances or
+        all instances of a class
+
+        Usage: all <class name> OR <class name>.all() OR all
         """
-        a = []
+        output = []
         if not arg:
             for value in storage.all().values():
-                a.append(str(value))
-            print(a)
+                output.append(str(value))
+            print(output)
+
         elif arg not in self.classes:
             print("** class doesn't exist **")
         else:
             for key, value in storage.all().items():
                 if arg in key:
-                    a.append(str(value))
-            print(a)
+                    output.append(str(value))
+            print(output)
 
     def do_update(self, arg):
-        """Update an instance based on the class name and id\
-        \nUsage: update <class name> <id> <attribute name> <attribute value>
-        <class name>.update(<id>, <attribute name>, <attribute value>)
-        <class name>.update(<id>, <dictionary representation>)\
+        """Updates/adds to an instance's attributes
+
+        Usage: update <class name> <id> <attribute name> "<attribute value>"
+            OR <class name>.update(<id>, <attribute name>, "<attribute value>)"
+            OR <class name>.update(<id>, <dictionary representation>)
         """
-        if '*' in arg:
-            cmds = arg.split(' *')
-            cmds[0] = cmds[0].replace('*', '', 1)
-            cmds[2] = ast.literal_eval(cmds[2])
-        else:
-            cmds = arg.split(" ", 4)
-        if len(cmds) == 0:
+        if not arg:
             print("** class name missing **")
-        elif cmds[0] not in self.classes:
+            return
+        if '*' in arg:
+            tokens = arg.split(' *')
+            tokens[0] = tokens[0].replace('*', '', 1)
+            tokens[2] = ast.literal_eval(tokens[2])
+        else:
+            tokens = arg.split(" ", 4)
+
+        if tokens[0] not in self.classes:
             print("** class doesn't exist **")
-        elif len(cmds) == 1:
+        elif len(tokens) == 1:
             print("** instance id missing **")
         else:
             dict_obj = storage.all()
-            key = f"{cmds[0]}.{cmds[1]}"
+            key = f"{tokens[0]}.{tokens[1]}"
             if key not in dict_obj:
                 print("** no instance found **")
                 return
-        if len(cmds) == 2:
+
+        if len(tokens) == 2:
             print("** attribute name missing **")
-        elif len(cmds) == 3:
-            if type(cmds[2]) is dict:
-                for k, v in cmds[2].items():
+        elif len(tokens) == 3:
+            if type(tokens[2]) is dict:
+                for k, v in tokens[2].items():
                     setattr(storage.all()[key], k, v)
                     storage.save()
                 return
             print("** value missing **")
+
         else:
-            if len(cmds) == 4:
+            if len(tokens) == 4:
                 a = []
-                if '"' in cmds[3]:
-                    a = cmds[3]
-                    cmds[3] = a[1:-1]
-                elif cmds[3].isdigit():
-                    cmds[3] = int(cmds[3])
-                elif cmds[3].replace('.', "").isdigit():
-                    cmds[3] = float(cmds[3])
-                setattr(storage.all()[key], cmds[2], cmds[3])
+                if '"' in tokens[3]:
+                    a = tokens[3]
+                    tokens[3] = a[1:-1]
+                elif tokens[3].isdigit():
+                    tokens[3] = int(tokens[3])
+                elif tokens[3].replace('.', "").isdigit():
+                    tokens[3] = float(tokens[3])
+                setattr(storage.all()[key], tokens[2], tokens[3])
                 storage.save()
 
-    def default(self, arg):
-        """Parse lines which are not recognized as commands\
-        \nUsage: <class name>.count()\
+    def default(self, line):
+        """Parse lines which are not recognized as commands
         """
-        cmds = arg.split(' ')
-        if cmds[0] == 'count':
+        tokens = line.split(' ')
+        if tokens[0] == 'count':
             count = 0
             for key in storage.all():
-                if cmds[1] in key:
+                if tokens[1] in key:
                     count += 1
             print(count)
         else:
-            return super().default(arg)
+            return super().default(line)
 
 
 if __name__ == '__main__':
