@@ -29,8 +29,9 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
-    def parseline(self, line):
-        """Adds support for the `(` syntax """
+    def precmd(self, line):
+        """Parses the line before it is executed
+        """
         if '(' in line:
             line = line.replace('.', ' ', 1).replace('(', ' ', 1)
             line = line.replace(')', '')
@@ -58,7 +59,9 @@ class HBNBCommand(cmd.Cmd):
                 line = " ".join([line[1], line[0], line[2], line[3], line[4]])
             else:
                 line = " ".join([line[1], line[0]])
-        return super().parseline(line)
+
+        print(line)
+        return line
 
     def do_quit(self, arg):
         """Exit the program with the command 'quit'
