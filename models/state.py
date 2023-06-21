@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-"""
-This module contains a `State` class which is inherited
-from `BaseModel` class
-"""
-from models.base_model import BaseModel
+"""The state module"""
+from .base_model import BaseModel
 
 
 class State(BaseModel):
-    """This class defines the name of the state """
+    """Defines the State class, inherits from BaseModel
+
+    Attributes:
+        name (str): The name of the state
+    """
     name = ""

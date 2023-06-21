@@ -1,11 +1,14 @@
 #!/usr/bin/python3
-"""This module contains a `City` class which is inherited
-from `BaseModel` class
-"""
-from models.base_model import BaseModel
+"""The city module"""
+from .base_model import BaseModel
 
 
 class City(BaseModel):
-    """This class defines the name and an id of the state """
-    state_id = ""  # State.id
+    """Defines the City class, inherits from BaseModel
+
+    Attributes:
+        state_id (str): The state id
+        name (str): The name of the city
+    """
+    state_id = ""
     name = ""
