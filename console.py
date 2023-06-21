@@ -43,7 +43,7 @@ class HBNBCommand(cmd.Cmd):
                 line[3] = line[3].replace('##', ': ').replace('%%', ', ')
                 line[2] = line[2].replace('"', '').replace(',', '')
                 line = " *".join([line[1], line[0], line[2], line[3]])
-                return super().parseline(line)
+                return line
             line = line.split()
             if len(line) == 3:
                 #  For show and destroy
