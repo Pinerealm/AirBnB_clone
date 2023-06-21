@@ -60,7 +60,6 @@ class HBNBCommand(cmd.Cmd):
             else:
                 line = " ".join([line[1], line[0]])
 
-        print(line)
         return line
 
     def do_quit(self, arg):
