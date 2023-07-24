@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""The FileStorage module"""
+"""The FileStorage module
+"""
 import json
 
 
@@ -9,7 +10,7 @@ class FileStorage:
 
     Attributes:
         __file_path (str): The path to the JSON file
-        __objects (dict): A dictionary of instantiated objects
+        __objects (dict): A dictionary to store instantiated objects
     """
     __file_path = "file.json"
     __objects = {}
@@ -41,20 +42,25 @@ class FileStorage:
         """Deserializes from the JSON file specified by '__file_path' to
         the '__objects' dictionary, if the file exists
         """
-        from models.amenity import Amenity
-        from models.base_model import BaseModel
-        from models.city import City
+        from ..amenity import Amenity
+        from ..base_model import BaseModel
+        from ..city import City
 
-        from models.place import Place
-        from models.review import Review
-        from models.state import State
-        from models.user import User
+        from ..place import Place
+        from ..review import Review
+        from ..state import State
+        from ..user import User
+
+        classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+                   "Place": Place, "Review": Review, "State": State,
+                   "User": User}
 
         try:
             with open(self.__file_path, encoding="utf-8") as f:
                 new_dict = json.load(f)
             for key, value in new_dict.items():
-                cls = eval(value["__class__"])
-                self.__objects[key] = cls(**value)
+                if value["__class__"] in classes:
+                    cls = classes[value["__class__"]]
+                    self.__objects[key] = cls(**value)
         except FileNotFoundError:
             pass
