@@ -18,6 +18,10 @@ import sys
 
 class HBNBCommand(cmd.Cmd):
     """Defines the HBNBCommand class for AirBnB_clone
+
+    Attributes:
+        prompt (str): The command prompt
+        classes (tuple): The list of classes that can be created
     """
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
     classes = ('BaseModel', 'User', 'State', 'Review',

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""The place module"""
+"""The place module
+"""
 from .base_model import BaseModel
 
 
@@ -7,8 +8,8 @@ class Place(BaseModel):
     """Defines the Place class, inherits from BaseModel
 
     Attributes:
-        city_id (str): The id of the city
-        user_id (str): The id of the user
+        city_id (str): The city id
+        user_id (str): The user id
         name (str): The name of the place
         description (str): The description of the place
         number_rooms (int): The number of rooms in the place

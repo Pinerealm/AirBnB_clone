@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""The city module"""
+"""The city module
+"""
 from .base_model import BaseModel
 
 
@@ -8,7 +9,7 @@ class City(BaseModel):
 
     Attributes:
         state_id (str): The state id
-        name (str): The name of the city
+        name (str): The city name
     """
     state_id = ""
     name = ""
