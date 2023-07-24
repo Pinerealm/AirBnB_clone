@@ -47,13 +47,11 @@ class HBNBCommand(cmd.Cmd):
             line = line.replace(')', '')
             if '{' in line and ': ' in line and '}' in line:
                 #  Update if dictionary is given
-                line = line.replace(': ', '##').replace(', ', '%%')
-                line = line.replace('%%{', ' {', 1)
-                line = line.split(" ", 3)
-                line[3] = line[3].replace('##', ': ').replace('%%', ', ')
-                line[2] = line[2].replace('"', '').replace(',', '')
-                line = " *".join([line[1], line[0], line[2], line[3]])
-                return line
+                pre_dict, dict_info = line.split(', {', 1)
+                pre_dict = pre_dict.split(" ")
+                pre_dict[2] = pre_dict[2].replace('"', '')
+                return ' '.join([pre_dict[1], pre_dict[0], pre_dict[2],
+                                 '{' + dict_info])
 
             line = line.split()
             if len(line) == 3:
@@ -178,10 +176,11 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
-        if '*' in arg:
-            tokens = arg.split(' *')
-            tokens[0] = tokens[0].replace('*', '', 1)
-            tokens[2] = ast.literal_eval(tokens[2])
+        if '{' in arg and ': ' in arg and '}' in arg:
+            tokens = arg.split(' {')
+            tokens[0] = tokens[0].split()
+            tokens[1] = ast.literal_eval('{' + tokens[1])
+            tokens = [tokens[0][0], tokens[0][1], tokens[1]]
         else:
             tokens = arg.split(" ", 4)
 
