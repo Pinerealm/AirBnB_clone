@@ -1,13 +1,14 @@
 #!/usr/bin/python3
-"""The BaseModel module"""
+"""The BaseModel module
+"""
 from datetime import datetime
 from models import storage
 from uuid import uuid4
 
 
 class BaseModel:
-    """Defines the common attributes/methods for other classes"""
-
+    """Defines the common attributes/methods for other classes
+    """
     def __init__(self, *args, **kwargs):
         """Initializes a BaseModel instance
         """
@@ -35,11 +36,12 @@ class BaseModel:
         storage.save()
 
     def to_dict(self):
-        """Returns a dictionary containing all keys/values of __dict__ of
-        the instance
+        """Returns a dictionary containing all keys/values of the instance's
+        __dict__ attribute
         """
         new_dict = self.__dict__.copy()
         new_dict["__class__"] = self.__class__.__name__
         new_dict["created_at"] = self.created_at.isoformat()
         new_dict["updated_at"] = self.updated_at.isoformat()
+
         return new_dict
