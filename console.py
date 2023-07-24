@@ -29,6 +29,13 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
+    def postcmd(self, stop, line):
+        """Print '(hbnb)' if the program is about to exit non-interactively
+        """
+        if not sys.__stdin__.isatty() and stop is True:
+            print('(hbnb)')
+        return stop
+
     def parseline(self, line):
         """Parses the line before it is executed
         """
