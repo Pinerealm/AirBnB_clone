@@ -227,7 +227,7 @@ class HBNBCommand(cmd.Cmd):
         if tokens[0] == 'count':
             count = 0
             for key in storage.all():
-                if tokens[1] in key:
+                if tokens[1] == key.split('.')[0]:
                     count += 1
             print(count)
         else:
