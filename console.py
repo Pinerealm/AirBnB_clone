@@ -24,17 +24,16 @@ class HBNBCommand(cmd.Cmd):
                'City', 'Amenity', 'Place')
 
     def preloop(self):
-        """Displays a different prompt on non-interactive mode
+        """Displays an entry prompt on non-interactive mode
         """
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
-    def postcmd(self, stop, line):
-        """Print '(hbnb)' if the program is about to exit non-interactively
+    def postloop(self):
+        """Displays an exit prompt on non-interactive mode
         """
-        if not sys.__stdin__.isatty() and stop is True:
+        if not sys.__stdin__.isatty():
             print('(hbnb)')
-        return stop
 
     def parseline(self, line):
         """Parses the line before it is executed
@@ -83,10 +82,11 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Does nothing when an empty line is entered
         """
-        pass
+        return False
 
     def do_create(self, arg):
-        """Creates a new instance of a given class, and saves it to a JSON file
+        """Creates a new instance of a given class, saves it to a JSON file,
+        and prints the id
 
         Usage: create <class name>, OR <class name>.create()
         """
@@ -161,7 +161,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             for key, value in storage.all().items():
-                if arg in key:
+                if arg == key.split('.')[0]:
                     output.append(str(value))
             print(output)
 
@@ -187,12 +187,13 @@ class HBNBCommand(cmd.Cmd):
             return
         if len(tokens) == 1:
             print("** instance id missing **")
-        else:
-            dict_obj = storage.all()
-            key = f"{tokens[0]}.{tokens[1]}"
-            if key not in dict_obj:
-                print("** no instance found **")
-                return
+            return
+
+        obj_dict = storage.all()
+        key = f"{tokens[0]}.{tokens[1]}"
+        if key not in obj_dict:
+            print("** no instance found **")
+            return
 
         if len(tokens) == 2:
             print("** attribute name missing **")
@@ -205,17 +206,15 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
 
         else:
-            if len(tokens) == 4:
-                a = []
-                if '"' in tokens[3]:
-                    a = tokens[3]
-                    tokens[3] = a[1:-1]
-                elif tokens[3].isdigit():
-                    tokens[3] = int(tokens[3])
-                elif tokens[3].replace('.', "").isdigit():
-                    tokens[3] = float(tokens[3])
-                setattr(storage.all()[key], tokens[2], tokens[3])
-                storage.save()
+            if tokens[3][0] == tokens[3][-1] == '"':
+                tokens[3] = tokens[3][1:-1]
+            if tokens[3].isdigit():
+                tokens[3] = int(tokens[3])
+            if tokens[3].replace('.', "", 1).isdigit():
+                tokens[3] = float(tokens[3])
+
+            setattr(storage.all()[key], tokens[2], tokens[3])
+            storage.save()
 
     def default(self, line):
         """Parse lines which are not recognized as commands
