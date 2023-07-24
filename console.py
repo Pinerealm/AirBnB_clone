@@ -54,6 +54,7 @@ class HBNBCommand(cmd.Cmd):
                 line[2] = line[2].replace('"', '').replace(',', '')
                 line = " *".join([line[1], line[0], line[2], line[3]])
                 return line
+
             line = line.split()
             if len(line) == 3:
                 #  For show and destroy
@@ -61,10 +62,8 @@ class HBNBCommand(cmd.Cmd):
                 line = " ".join([line[1], line[0], line[2]])
             elif len(line) >= 5:
                 #  Update if attribute name and value are given
-                line[2] = line[2].replace('"', '')
-                line[2] = line[2].replace(',', '')
-                line[3] = line[3].replace('"', '')
-                line[3] = line[3].replace(',', '')
+                line[2] = line[2].replace('"', '').replace(',', '')
+                line[3] = line[3].replace('"', '').replace(',', '')
                 line[4] = line[4].replace('"', '')
                 line = " ".join([line[1], line[0], line[2], line[3], line[4]])
             else:
@@ -212,9 +211,9 @@ class HBNBCommand(cmd.Cmd):
         else:
             if tokens[3][0] == tokens[3][-1] == '"':
                 tokens[3] = tokens[3][1:-1]
-            if tokens[3].isdigit():
+            elif tokens[3].isdigit():
                 tokens[3] = int(tokens[3])
-            if tokens[3].replace('.', "", 1).isdigit():
+            elif tokens[3].replace('.', "", 1).isdigit():
                 tokens[3] = float(tokens[3])
 
             setattr(storage.all()[key], tokens[2], tokens[3])
