@@ -5,8 +5,8 @@ from console import HBNBCommand
 from io import StringIO
 from models import storage
 import os
-import sys
 
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -33,6 +33,19 @@ class TestConsole(unittest.TestCase):
         """Test the prompt
         """
         self.assertEqual("(hbnb) ", self.cns.prompt)
+
+    def test_help(self):
+        """Test the help command
+        """
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("help quit")
+            output = "Exits the program\n"
+            self.assertEqual(output, f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("help EOF")
+            output = "Exits the program on receiving the EOF signal\n"
+            self.assertEqual(output, f.getvalue())
 
     def test_emptyline(self):
         """Test an empty line input

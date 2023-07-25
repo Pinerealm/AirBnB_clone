@@ -73,12 +73,22 @@ class HBNBCommand(cmd.Cmd):
         """Exit the program with the command 'quit'
         """
         return True
+    
+    def help_quit(self):
+        """Documentation for the quit command
+        """
+        print("Exits the program")
 
     def do_EOF(self, arg):
         """Exit the program on receiving the EOF signal
         """
         print()
         return True
+    
+    def help_EOF(self):
+        """Documentation for the EOF signal
+        """
+        print("Exits the program on receiving the EOF signal")
 
     def emptyline(self):
         """Does nothing when an empty line is entered
