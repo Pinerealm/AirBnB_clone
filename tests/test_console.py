@@ -5,6 +5,7 @@ from console import HBNBCommand
 from io import StringIO
 from models import storage
 import os
+import sys
 
 import unittest
 from unittest.mock import patch
@@ -27,6 +28,7 @@ class TestConsole(unittest.TestCase):
         if os.path.exists("test.json"):
             os.remove("test.json")
 
+    @unittest.skipUnless(sys.__stdin__.isatty(), "interactive mode only")
     def test_prompt(self):
         """Test the prompt
         """

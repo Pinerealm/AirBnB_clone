@@ -64,7 +64,7 @@ class TestBaseModel(unittest.TestCase):
         b1.save()
         self.assertNotEqual(b1.created_at, b1.updated_at)
 
-        with open('test.json', "r") as f:
+        with open(storage._FileStorage__file_path, "r") as f:
             self.assertIn("BaseModel." + b1.id, f.read())
 
     def test_to_dict(self):
