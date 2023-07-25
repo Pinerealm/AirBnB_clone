@@ -184,11 +184,25 @@ class TestConsole(unittest.TestCase):
             self.assertNotIn("Place", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
+            line = self.cns.precmd('BaseModel.all()')
+            self.cns.onecmd(line)
+            self.assertIn("BaseModel", f.getvalue())
+            self.assertNotIn("User", f.getvalue())
+            self.assertNotIn("Place", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("create BaseModel")
             self.cns.onecmd("create User")
             self.cns.onecmd("create Place")
             self.cns.onecmd("all User")
 
+            self.assertNotIn("BaseModel", f.getvalue())
+            self.assertIn("User", f.getvalue())
+            self.assertNotIn("Place", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            line = self.cns.precmd('User.all()')
+            self.cns.onecmd(line)
             self.assertNotIn("BaseModel", f.getvalue())
             self.assertIn("User", f.getvalue())
             self.assertNotIn("Place", f.getvalue())
