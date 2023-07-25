@@ -132,9 +132,18 @@ class TestConsole(unittest.TestCase):
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("create BaseModel")
-            key = "BaseModel." + f.getvalue().strip()
+            self.cns.onecmd("create BaseModel")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "BaseModel." + obj_id1
             self.assertIn(key, storage.all())
-            self.cns.onecmd("destroy BaseModel " + f.getvalue().strip())
+            self.cns.onecmd("destroy BaseModel " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            line = self.cns.precmd('BaseModel.destroy("' + obj_id2 + '")')
+            key = "BaseModel." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd(line)
             self.assertNotIn(key, storage.all())
 
     def test_all(self):
@@ -205,22 +214,30 @@ class TestConsole(unittest.TestCase):
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("update BaseModel " + object_id +
-                                " first_name")
+                            " first_name")
             self.assertEqual("** value missing **\n", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("update BaseModel " + object_id +
-                                " first_name \"Betty\"")
+                            " first_name \"Betty\"")
             self.assertEqual("", f.getvalue())
             self.cns.onecmd("show BaseModel " + object_id)
             self.assertIn("Betty", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("update BaseModel " + object_id +
-                                " first_name \"Holberton\"")
+                            " first_name \"Holberton\"")
             self.assertEqual("", f.getvalue())
             self.cns.onecmd("show BaseModel " + object_id)
             self.assertIn("Holberton", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            line = self.cns.precmd('BaseModel.update("' + object_id +
+                                   '", "first_name", "Zaid")')
+            self.cns.onecmd(line)
+            self.assertEqual("", f.getvalue())
+            self.cns.onecmd("show BaseModel " + object_id)
+            self.assertIn("Zaid", f.getvalue())
 
     def test_count(self):
         """Test the .count() command
