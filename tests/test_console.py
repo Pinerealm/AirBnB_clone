@@ -89,17 +89,29 @@ class TestConsole(unittest.TestCase):
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("create BaseModel")
-            key = "BaseModel." + f.getvalue().strip()
+            obj_id = f.getvalue().strip()
+            key = "BaseModel." + obj_id
             self.assertIn(key, storage.all())
-            self.cns.onecmd("show BaseModel " + f.getvalue().strip())
+            self.cns.onecmd("show BaseModel " + obj_id)
             self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
+            line = self.cns.precmd('BaseModel.show("' + obj_id + '")')
+            self.cns.onecmd(line)
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("create User")
-            key = "User." + f.getvalue().strip()
+            obj_id = f.getvalue().strip()
+            key = "User." + obj_id
             self.assertIn(key, storage.all())
-            self.cns.onecmd("show User " + f.getvalue().strip())
+            self.cns.onecmd("show User " + obj_id)
             self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            line = self.cns.precmd('User.show("' + obj_id + '")')
+            self.cns.onecmd(line)
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
 
     def test_destroy(self):
         """Test the destroy command
