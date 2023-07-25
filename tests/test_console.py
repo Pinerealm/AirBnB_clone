@@ -111,8 +111,7 @@ class TestConsole(unittest.TestCase):
             self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd('BaseModel.show("' + obj_id + '")')
-            self.cns.onecmd(line)
+            self.cns.onecmd('BaseModel.show("' + obj_id + '")')
             self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
@@ -124,8 +123,7 @@ class TestConsole(unittest.TestCase):
             self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd('User.show("' + obj_id + '")')
-            self.cns.onecmd(line)
+            self.cns.onecmd('User.show("' + obj_id + '")')
             self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
 
     def test_destroy(self):
@@ -155,10 +153,9 @@ class TestConsole(unittest.TestCase):
             self.assertNotIn(key, storage.all())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd('BaseModel.destroy("' + obj_id2 + '")')
             key = "BaseModel." + obj_id2
             self.assertIn(key, storage.all())
-            self.cns.onecmd(line)
+            self.cns.onecmd('BaseModel.destroy("' + obj_id2 + '")')
             self.assertNotIn(key, storage.all())
 
     def test_all(self):
@@ -184,8 +181,7 @@ class TestConsole(unittest.TestCase):
             self.assertNotIn("Place", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd('BaseModel.all()')
-            self.cns.onecmd(line)
+            self.cns.onecmd('BaseModel.all()')
             self.assertIn("BaseModel", f.getvalue())
             self.assertNotIn("User", f.getvalue())
             self.assertNotIn("Place", f.getvalue())
@@ -201,8 +197,7 @@ class TestConsole(unittest.TestCase):
             self.assertNotIn("Place", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd('User.all()')
-            self.cns.onecmd(line)
+            self.cns.onecmd('User.all()')
             self.assertNotIn("BaseModel", f.getvalue())
             self.assertIn("User", f.getvalue())
             self.assertNotIn("Place", f.getvalue())
@@ -261,9 +256,8 @@ class TestConsole(unittest.TestCase):
             self.assertIn("Holberton", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd('BaseModel.update("' + object_id +
-                                   '", "first_name", "Zaid")')
-            self.cns.onecmd(line)
+            self.cns.onecmd('BaseModel.update("' + object_id +
+                            '", "first_name", "Zaid")')
             self.assertEqual("", f.getvalue())
             self.cns.onecmd("show BaseModel " + object_id)
             self.assertIn("Zaid", f.getvalue())
@@ -272,18 +266,16 @@ class TestConsole(unittest.TestCase):
         """Test the .count() command
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd("BaseModel.count()")
-            self.cns.onecmd(line)
+            self.cns.onecmd("BaseModel.count()")
             self.assertEqual("0\n", f.getvalue())
             self.cns.onecmd("create BaseModel")
 
         with patch('sys.stdout', new=StringIO()) as f:
-            self.cns.onecmd(line)
+            self.cns.onecmd("BaseModel.count()")
             self.assertEqual("1\n", f.getvalue())
             self.cns.onecmd("create User")
             self.cns.onecmd("create User")
 
         with patch('sys.stdout', new=StringIO()) as f:
-            line = self.cns.precmd("User.count()")
-            self.cns.onecmd(line)
+            self.cns.onecmd("User.count()")
             self.assertEqual("2\n", f.getvalue())

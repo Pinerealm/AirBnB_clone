@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
-    def precmd(self, line):
+    def parseline(self, line):
         """Parses the line before it is executed
         """
         if '(' in line and ')' in line:
@@ -50,8 +50,9 @@ class HBNBCommand(cmd.Cmd):
                 pre_dict, dict_info = line.split(', {', 1)
                 pre_dict = pre_dict.split(" ")
                 pre_dict[2] = pre_dict[2].replace('"', '')
-                return ' '.join([pre_dict[1], pre_dict[0], pre_dict[2],
+                line = ' '.join([pre_dict[1], pre_dict[0], pre_dict[2],
                                  '{' + dict_info])
+                return super().parseline(line)
 
             line = line.split()
             if len(line) == 3:
@@ -67,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 line = " ".join([line[1], line[0]])
 
-        return line
+        return super().parseline(line)
 
     def do_quit(self, arg):
         """Exit the program with the command 'quit'
