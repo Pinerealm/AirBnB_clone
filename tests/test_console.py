@@ -126,6 +126,66 @@ class TestConsole(unittest.TestCase):
             self.cns.onecmd('User.show("' + obj_id + '")')
             self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
 
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create State")
+            obj_id = f.getvalue().strip()
+            key = "State." + obj_id
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("show State " + obj_id)
+            self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd('State.show("' + obj_id + '")')
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create City")
+            obj_id = f.getvalue().strip()
+            key = "City." + obj_id
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("show City " + obj_id)
+            self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd('City.show("' + obj_id + '")')
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Amenity")
+            obj_id = f.getvalue().strip()
+            key = "Amenity." + obj_id
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("show Amenity " + obj_id)
+            self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd('Amenity.show("' + obj_id + '")')
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Place")
+            obj_id = f.getvalue().strip()
+            key = "Place." + obj_id
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("show Place " + obj_id)
+            self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd('Place.show("' + obj_id + '")')
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Review")
+            obj_id = f.getvalue().strip()
+            key = "Review." + obj_id
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("show Review " + obj_id)
+            self.assertIn(str(storage.all()[key]) + "\n", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd('Review.show("' + obj_id + '")')
+            self.assertEqual(str(storage.all()[key]) + "\n", f.getvalue())
+
     def test_destroy(self):
         """Test the destroy command
         """
@@ -152,10 +212,93 @@ class TestConsole(unittest.TestCase):
             self.cns.onecmd("destroy BaseModel " + obj_id1)
             self.assertNotIn(key, storage.all())
 
-        with patch('sys.stdout', new=StringIO()) as f:
             key = "BaseModel." + obj_id2
             self.assertIn(key, storage.all())
             self.cns.onecmd('BaseModel.destroy("' + obj_id2 + '")')
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create User")
+            self.cns.onecmd("create User")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "User." + obj_id1
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("destroy User " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+            key = "User." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd('User.destroy("' + obj_id2 + '")')
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create State")
+            self.cns.onecmd("create State")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "State." + obj_id1
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("destroy State " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+            key = "State." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd('State.destroy("' + obj_id2 + '")')
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create City")
+            self.cns.onecmd("create City")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "City." + obj_id1
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("destroy City " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+            key = "City." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd('City.destroy("' + obj_id2 + '")')
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Amenity")
+            self.cns.onecmd("create Amenity")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "Amenity." + obj_id1
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("destroy Amenity " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+            key = "Amenity." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd('Amenity.destroy("' + obj_id2 + '")')
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Place")
+            self.cns.onecmd("create Place")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "Place." + obj_id1
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("destroy Place " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+            key = "Place." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd('Place.destroy("' + obj_id2 + '")')
+            self.assertNotIn(key, storage.all())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Review")
+            self.cns.onecmd("create Review")
+            obj_id1, obj_id2 = f.getvalue().strip().split('\n')
+            key = "Review." + obj_id1
+            self.assertIn(key, storage.all())
+            self.cns.onecmd("destroy Review " + obj_id1)
+            self.assertNotIn(key, storage.all())
+
+            key = "Review." + obj_id2
+            self.assertIn(key, storage.all())
+            self.cns.onecmd('Review.destroy("' + obj_id2 + '")')
             self.assertNotIn(key, storage.all())
 
     def test_all(self):
@@ -201,6 +344,25 @@ class TestConsole(unittest.TestCase):
             self.assertNotIn("BaseModel", f.getvalue())
             self.assertIn("User", f.getvalue())
             self.assertNotIn("Place", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Review")
+            self.cns.onecmd("create State")
+            self.cns.onecmd("create City")
+            self.cns.onecmd("create Amenity")
+            self.cns.onecmd("create Place")
+
+            self.cns.onecmd("Review.all()")
+            self.assertIn("Review", f.getvalue())
+            self.cns.onecmd("State.all()")
+            self.assertIn("State", f.getvalue())
+            self.cns.onecmd("City.all()")
+
+            self.assertIn("City", f.getvalue())
+            self.cns.onecmd("Amenity.all()")
+            self.assertIn("Amenity", f.getvalue())
+            self.cns.onecmd("Place.all()")
+            self.assertIn("Place", f.getvalue())
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("create BaseModel")
@@ -278,4 +440,33 @@ class TestConsole(unittest.TestCase):
 
         with patch('sys.stdout', new=StringIO()) as f:
             self.cns.onecmd("User.count()")
+            self.assertEqual("2\n", f.getvalue())
+            self.cns.onecmd("create State")
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("State.count()")
+            self.assertEqual("1\n", f.getvalue())
+            self.cns.onecmd("create Place")
+            self.cns.onecmd("create Place")
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("Place.count()")
+            self.assertEqual("2\n", f.getvalue())
+            self.cns.onecmd("create City")
+            self.cns.onecmd("create City")
+            self.cns.onecmd("create City")
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("City.count()")
+            self.assertEqual("3\n", f.getvalue())
+            self.cns.onecmd("create Amenity")
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("Amenity.count()")
+            self.assertEqual("1\n", f.getvalue())
+            self.cns.onecmd("create Review")
+            self.cns.onecmd("create Review")
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("Review.count()")
             self.assertEqual("2\n", f.getvalue())
