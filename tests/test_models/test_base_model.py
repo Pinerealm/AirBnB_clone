@@ -1,12 +1,28 @@
 #!/usr/bin/python3
-"""This module tests the BaseModel class."""
+"""This module tests the BaseModel class.
+"""
 from datetime import datetime
+from models import storage
 from models.base_model import BaseModel
+import os
 import unittest
 
 
 class TestBaseModel(unittest.TestCase):
-    """Tests the BaseModel class"""
+    """Tests the BaseModel class
+    """
+    @classmethod
+    def setUpClass(cls):
+        """Sets up the class
+        """
+        storage._FileStorage__file_path = "test.json"
+
+    def setUp(self):
+        """Sets up each test
+        """
+        storage._FileStorage__objects = {}
+        if os.path.exists("test.json"):
+            os.remove("test.json")
 
     def test_init(self):
         """Tests the __init__ method
@@ -22,6 +38,7 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(b1.updated_at, datetime)
 
         self.assertNotEqual(b1.id, b2.id)
+        self.assertEqual(b1.created_at, b1.updated_at)
         self.assertNotEqual(b1.created_at, b2.created_at)
         self.assertNotEqual(b1.updated_at, b2.updated_at)
 
@@ -47,7 +64,7 @@ class TestBaseModel(unittest.TestCase):
         b1.save()
         self.assertNotEqual(b1.created_at, b1.updated_at)
 
-        with open("file.json", "r") as f:
+        with open(storage._FileStorage__file_path, "r") as f:
             self.assertIn("BaseModel." + b1.id, f.read())
 
     def test_to_dict(self):
