@@ -27,17 +27,12 @@ class HBNBCommand(cmd.Cmd):
     classes = ('BaseModel', 'User', 'State', 'Review',
                'City', 'Amenity', 'Place')
 
-    def preloop(self):
-        """Displays an entry prompt on non-interactive mode
+    def precmd(self, line):
+        """Displays a prompt before each command in non-interactive mode
         """
         if not sys.__stdin__.isatty():
-            print('(hbnb)')
-
-    def postloop(self):
-        """Displays an exit prompt on non-interactive mode
-        """
-        if not sys.__stdin__.isatty():
-            print('(hbnb)')
+            print('(hbnb)', end='')
+        return line
 
     def parseline(self, line):
         """Parses the line before it is executed
