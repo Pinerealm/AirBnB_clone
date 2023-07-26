@@ -424,6 +424,93 @@ class TestConsole(unittest.TestCase):
             self.cns.onecmd("show BaseModel " + object_id)
             self.assertIn("Zaid", f.getvalue())
 
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd('BaseModel.update("' + object_id +
+                            '", {"first_name": "John", "age": 89})')
+            self.assertEqual("", f.getvalue())
+            self.cns.onecmd("show BaseModel " + object_id)
+            self.assertIn("John", f.getvalue())
+            self.assertIn("89", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create User")
+            object_id = f.getvalue().strip()
+            self.cns.onecmd('User.update("' + object_id +
+                            '", "first_name", "Mary")')
+            self.cns.onecmd("show User " + object_id)
+            self.assertIn("Mary", f.getvalue())
+
+            self.cns.onecmd('User.update("' + object_id +
+                            '", {"first_name": "Bob", "age": 60})')
+            self.cns.onecmd("show User " + object_id)
+            self.assertIn("Bob", f.getvalue())
+            self.assertIn("60", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create State")
+            object_id = f.getvalue().strip()
+            self.cns.onecmd('State.update("' + object_id +
+                            '", "name", "California")')
+            self.cns.onecmd("show State " + object_id)
+            self.assertIn("California", f.getvalue())
+
+            self.cns.onecmd('State.update("' + object_id +
+                            '", {"name": "Nevada"})')
+            self.cns.onecmd("show State " + object_id)
+            self.assertIn("Nevada", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create City")
+            object_id = f.getvalue().strip()
+            self.cns.onecmd('City.update("' + object_id +
+                            '", "name", "San_Francisco")')
+            self.cns.onecmd("show City " + object_id)
+            self.assertIn("San_Francisco", f.getvalue())
+
+            self.cns.onecmd('City.update("' + object_id +
+                            '", {"name": "San_Jose"})')
+            self.cns.onecmd("show City " + object_id)
+            self.assertIn("San_Jose", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Amenity")
+            object_id = f.getvalue().strip()
+            self.cns.onecmd('Amenity.update("' + object_id +
+                            '", "name", "Wifi")')
+            self.cns.onecmd("show Amenity " + object_id)
+            self.assertIn("Wifi", f.getvalue())
+
+            self.cns.onecmd('Amenity.update("' + object_id +
+                            '", {"name": "Cable"})')
+            self.cns.onecmd("show Amenity " + object_id)
+            self.assertIn("Cable", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Place")
+            object_id = f.getvalue().strip()
+            self.cns.onecmd('Place.update("' + object_id +
+                            '", "name", "House")')
+            self.cns.onecmd("show Place " + object_id)
+            self.assertIn("House", f.getvalue())
+
+            self.cns.onecmd('Place.update("' + object_id +
+                            '", {"name": "Apartment"})')
+            self.cns.onecmd("show Place " + object_id)
+            self.assertIn("Apartment", f.getvalue())
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cns.onecmd("create Review")
+            object_id = f.getvalue().strip()
+            self.cns.onecmd('Review.update("' + object_id +
+                            '", "text", "Great")')
+            self.cns.onecmd("show Review " + object_id)
+            self.assertIn("Great", f.getvalue())
+
+            self.cns.onecmd('Review.update("' + object_id +
+                            '", {"text": "Good"})')
+            self.cns.onecmd("show Review " + object_id)
+            self.assertIn("Good", f.getvalue())
+
     def test_count(self):
         """Test the .count() command
         """
