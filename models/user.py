@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This module contains the User class definition
+"""The user module
 """
 from .base_model import BaseModel
 
