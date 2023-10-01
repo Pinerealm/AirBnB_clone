@@ -24,7 +24,7 @@ button:hover {
     opacity: 90%;
 }
 
-.locations, .amenities {
+.locations, .filters > .amenities {
     height: 100%;
     width: 25%;
     display: inline-block;
@@ -94,6 +94,6 @@ button:hover {
     padding: 1px 0;
 }
 
-.amenities > ul > li {
+.filters > .amenities > ul > li {
     padding: 1px 0;
 }
