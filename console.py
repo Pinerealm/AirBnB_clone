@@ -21,16 +21,23 @@ class HBNBCommand(cmd.Cmd):
 
     Attributes:
         prompt (str): The command prompt
-        classes (tuple): The list of classes that can be created
+        class_map (dict): The mapping of class names to classes
     """
-    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
-    classes = ('BaseModel', 'User', 'State', 'Review',
-               'City', 'Amenity', 'Place')
+    prompt = '(hbnb) ' if sys.stdin.isatty() else ''
+    class_map = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'State': State,
+        'Review': Review,
+        'City': City,
+        'Amenity': Amenity,
+        'Place': Place
+    }
 
     def precmd(self, line):
         """Displays a prompt before each command in non-interactive mode
         """
-        if not sys.__stdin__.isatty():
+        if not sys.stdin.isatty():
             print('(hbnb)', end='')
         return line
 
