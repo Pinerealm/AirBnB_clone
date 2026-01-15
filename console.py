@@ -72,6 +72,36 @@ class HBNBCommand(cmd.Cmd):
 
         return super().parseline(line)
 
+    def _validate_class(self, class_name):
+        """Validates if class exists
+
+        Args:
+            class_name (str): The name of the class to validate
+
+        Returns:
+            bool: True if class exists, False otherwise
+        """
+        if class_name not in self.class_map:
+            print("** class doesn't exist **")
+            return False
+        return True
+
+    def _get_instance(self, class_name, instance_id):
+        """Retrieves an instance or prints error
+
+        Args:
+            class_name (str): The name of the class
+            instance_id (str): The ID of the instance
+
+        Returns:
+            object: The instance if found, None otherwise
+        """
+        key = f"{class_name}.{instance_id}"
+        if key not in storage.all():
+            print('** no instance found **')
+            return None
+        return storage.all()[key]
+
     def do_quit(self, arg):
         """Exit the program with the command 'quit'
         """
@@ -108,12 +138,12 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         tokens = arg.split()
-        if tokens[0] not in self.classes:
-            print("** class doesn't exist **")
-        else:
-            new_instance = eval(tokens[0])()
-            new_instance.save()
-            print(new_instance.id)
+        if not self._validate_class(tokens[0]):
+            return
+
+        new_instance = self.class_map[tokens[0]]()
+        new_instance.save()
+        print(new_instance.id)
 
     def do_show(self, arg):
         """Prints the string representation of an instance based on the
@@ -124,18 +154,17 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
-        tokens = arg.split()
-        if tokens[0] not in self.classes:
-            print("** class doesn't exist **")
-        elif len(tokens) == 1:
-            print("** instance id missing **")
 
-        else:
-            key = tokens[0] + '.' + tokens[1]
-            if key not in storage.all():
-                print('** no instance found **')
-            else:
-                print(storage.all()[key])
+        tokens = arg.split()
+        if not self._validate_class(tokens[0]):
+            return
+        if len(tokens) == 1:
+            print("** instance id missing **")
+            return
+
+        instance = self._get_instance(tokens[0], tokens[1])
+        if instance:
+            print(instance)
 
     def do_destroy(self, arg):
         """Deletes an instance based on class name and id
@@ -145,19 +174,20 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
-        tokens = arg.split()
-        if tokens[0] not in self.classes:
-            print("** class doesn't exist **")
-        elif len(tokens) == 1:
-            print("** instance id missing **")
 
+        tokens = arg.split()
+        if not self._validate_class(tokens[0]):
+            return
+        if len(tokens) == 1:
+            print("** instance id missing **")
+            return
+
+        key = f"{tokens[0]}.{tokens[1]}"
+        if key not in storage.all():
+            print('** no instance found **')
         else:
-            key = tokens[0] + '.' + tokens[1]
-            if key not in storage.all():
-                print('** no instance found **')
-            else:
-                del storage.all()[key]
-                storage.save()
+            del storage.all()[key]
+            storage.save()
 
     def do_all(self, arg):
         """Displays the string representation of all instances or
@@ -170,14 +200,15 @@ class HBNBCommand(cmd.Cmd):
             for value in storage.all().values():
                 output.append(str(value))
             print(output)
+            return
 
-        elif arg not in self.classes:
-            print("** class doesn't exist **")
-        else:
-            for key, value in storage.all().items():
-                if arg == key.split('.')[0]:
-                    output.append(str(value))
-            print(output)
+        if not self._validate_class(arg):
+            return
+
+        for key, value in storage.all().items():
+            if arg == key.split('.')[0]:
+                output.append(str(value))
+        print(output)
 
     def do_update(self, arg):
         """Updates/adds to an instance's attributes
@@ -197,17 +228,14 @@ class HBNBCommand(cmd.Cmd):
         else:
             tokens = arg.split(" ", 4)
 
-        if tokens[0] not in self.classes:
-            print("** class doesn't exist **")
+        if not self._validate_class(tokens[0]):
             return
         if len(tokens) == 1:
             print("** instance id missing **")
             return
 
-        obj_dict = storage.all()
-        key = f"{tokens[0]}.{tokens[1]}"
-        if key not in obj_dict:
-            print("** no instance found **")
+        instance = self._get_instance(tokens[0], tokens[1])
+        if not instance:
             return
 
         if len(tokens) == 2:
@@ -215,8 +243,8 @@ class HBNBCommand(cmd.Cmd):
         elif len(tokens) == 3:
             if type(tokens[2]) is dict:
                 for k, v in tokens[2].items():
-                    setattr(storage.all()[key], k, v)
-                    storage.save()
+                    setattr(instance, k, v)
+                storage.save()
                 return
             print("** value missing **")
 
@@ -228,7 +256,7 @@ class HBNBCommand(cmd.Cmd):
             elif tokens[3].replace('.', "", 1).isdigit():
                 tokens[3] = float(tokens[3])
 
-            setattr(storage.all()[key], tokens[2], tokens[3])
+            setattr(instance, tokens[2], tokens[3])
             storage.save()
 
     def default(self, line):
