@@ -263,7 +263,7 @@ class HBNBCommand(cmd.Cmd):
         """Parse lines which are not recognized as commands
         """
         tokens = line.split(' ')
-        if tokens[0] == 'count':
+        if tokens[0] == 'count' and len(tokens) > 1:
             count = 0
             for key in storage.all():
                 if tokens[1] == key.split('.')[0]:
