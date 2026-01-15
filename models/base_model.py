@@ -2,13 +2,15 @@
 """The BaseModel module
 """
 from datetime import datetime
-from models import storage
 from uuid import uuid4
+
+from models import storage
 
 
 class BaseModel:
     """Defines the common attributes/methods for other classes
     """
+
     def __init__(self, *args, **kwargs):
         """Initializes a BaseModel instance
         """
