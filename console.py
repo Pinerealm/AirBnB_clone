@@ -38,7 +38,7 @@ class HBNBCommand(cmd.Cmd):
         """Displays a prompt before each command in non-interactive mode
         """
         if not sys.stdin.isatty():
-            print('(hbnb)', end='')
+            print('(hbnb)\n', end='')
         return line
 
     def parseline(self, line):
@@ -115,7 +115,8 @@ class HBNBCommand(cmd.Cmd):
     def do_EOF(self, arg):
         """Exit the program on receiving the EOF signal
         """
-        print()
+        if sys.stdin.isatty():
+             print()
         return True
 
     def help_EOF(self):
